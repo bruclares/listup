@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}Minhas tarefas{% endblock %}
+
+{% block content %}
+
+    <header>
+        <h1 class="titulo">listUp</h1>
+        <h4 class="subtitulo">Uma tarefa de cada vez!</h4>
+    </header>
+        {% if tasks %}
+            <nav>
+                <form>
+                    <label for="search"></label><br>
+                    <input type="search" name="search" id="search" placeholder="buscar"><br>
+                    <button type="submit">Buscar</button>
+                </form>
+                <a class="btn-new-task" href="{{ url_for('task.create')}}">Nova tarefa</a>
+            </nav>
+            <main>
+                <section>
+                    <ul>
+                        {% if tasks is not string %}
+                            {% for task in tasks %}
+                                <li>
+                                    <div>{{ task['description'] }}</div>
+                                    <div>{{ task['category_id'] }}</div>
+                                    <span>{{ task['created_at'] }}</span>
+
+                                    {% if task['conclusion_date'] %}
+                                        <span>{{ task['conclusion_date'] }}</span>
+                                    {% endif %}
+
+                                    <ul>
+                                        <li><a href="#">check</a></li>
+                                        <li><a href="#">alterar</a></li>
+                                        <li><a href="#">excluir</a></li>
+                                    </ul>   
+                                </li>
+                            {% endfor %}
+                        {% else %}
+                            <p>{{ tasks }}</p>
+                        {% endif %}
+                    </ul>
+                </section>
+            </main>
+        {% else %}
+            <p class="text-center fs-5">
+                Você não tem nenhuma tarefa. <br> 
+                Comece a cadastrar as suas tarefas <a class="fw-bold" href="{{ url_for('task.create') }}">aqui</a>
+            </p>
+        {% endif %}
+{% endblock %}

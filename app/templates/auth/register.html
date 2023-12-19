@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Cadastre-se{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        <header>
+            <h1 class="titulo">listUp</h1>
+            <h4 class="subtitulo">Desperte sua produtividade!</h4>
+            {% for message in get_flashed_messages() %}
+                <div class="alert">{{ message }}</div>
+            {% endfor %}
+        </header>
+        <main>
+            <section>
+                <form method="POST">
+                    <label for="name"></label> <br>
+                    <input type="text" name="name" id="name" placeholder="nome completo"> <br>
+                
+                    <label for="email"></label><br>
+                    <input type="email" name="email" id="email" placeholder="e-mail"><br>
+
+                    <label for="password"></label><br>
+                    <input type="password" name="password" id="password" placeholder="senha"><br><br>
+            
+                    <button type="submit">Crie sua conta</button>
+
+                    
+                </form>
+            </section>
+        </main>
+    </div>
+
+{% endblock %}

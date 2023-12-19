@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        <header>
+            <h1 class="titulo">listUp</h1>
+            <h4 class="subtitulo">Conquiste seus objetivos!</h4>
+            {% for message in get_flashed_messages() %}
+                <div class="alert">{{ message }}</div>
+            {% endfor %}
+        </header>
+        <main>
+            <section>
+                <form method="POST">
+                    <label for="email"></label><br>
+                    <input type="email" name="email" id="email" placeholder="e-mail"><br>
+
+                    <label for="password"></label><br>
+                    <input type="password" name="password" id="password" placeholder="senha"><br><br>
+            
+                    <button type="submit">Login</button>
+
+                    <p>Ainda não tem uma conta?<br><a href="{{ url_for('auth.register') }}">Cadastre-se</a></p>
+                </form>
+            </section>
+            </main>
+    </div>
+
+{% endblock %}

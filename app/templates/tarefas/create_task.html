@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Adicione uma tarefa{% endblock %}
+
+{% block content %}
+
+    <div>
+        <header>
+            <h1 class="titulo">listUp</h1>
+            <h4 class="subtitulo">Transforme suas tarefas em triunfos!</h4>
+        </header>
+        <main>
+            <section>
+                <div>
+                    <button form="create-task">Salvar</button>
+                </div>
+                <form id="create-task" method="POST">
+                    <label for="description"></label><br>
+                    <input type="text" name="description" id="description" placeholder="adicione sua tarefa"><br>
+
+                    <label for="category_id">Selecione a categoria</label><br><br>
+                    <select name="category_id" id="category_id">
+                        <option value="1" selected>Pessoal</option>
+                        <option value="2">Profissional</option>
+                        <option value="3">Familiar</option>
+                    </select>
+                </form>
+            </section>
+        </main>
+
+{% endblock %}
