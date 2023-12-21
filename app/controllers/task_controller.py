@@ -7,6 +7,7 @@ from .auth_controller import login_required
 from ..models.task import Task
 from ..models.category import Category
 
+
 bp = Blueprint('task', __name__, url_prefix='/tarefas')
 
 
@@ -50,7 +51,7 @@ def create():
 
 @bp.route('<id>/alterar', methods=('GET', 'POST'))
 @login_required
-def update(id):
+def edit(id):
     if request.method == 'POST':
         description = request.form['description']
         category_id = request.form['category_id']
@@ -61,34 +62,16 @@ def update(id):
             error = 'A tarefa é obrigatória.'
 
         if error is None:
-            with get_db() as conn:
-                with conn.cursor() as curs:
-                    curs.execute(
-                        '''UPDATE tasks SET description = %s, category_id = %s
-                        WHERE id = %s''',
-                        (description, category_id, id))
+            Task.update(description, category_id, id)
 
             return redirect(url_for('task.list'))
 
         flash(error)
 
-    # pego no banco tudo o que eu preciso para enviar ao formulário
-    with get_db() as conn:
-        with conn.cursor() as curs:
-            # posso fazer todas as execuções no banco com o mesmo cursor
-            # busco a tarefa
-            curs.execute(
-                'SELECT * FROM tasks WHERE id = %s',
-                # parametro da função será o valor
-                (id,)
-            )
-            task = curs.fetchone()
+    task = Task.get_from_id(id)
 
-            # busco as categorias
-            curs.execute('SELECT id, name FROM categories')
-            categories = curs.fetchall()
+    categories = Category.get_all()
 
-    # envio com o forumulário tudo o que peguei do banco (task e categories)
     return render_template(
         'tarefas/update_task.html',
         task=task,
@@ -99,34 +82,22 @@ def update(id):
 @bp.route('<id>/conclusao')
 @login_required
 def conclusion(id):
-    with get_db() as conn:
-        with conn.cursor() as curs:
-            curs.execute(
-                '''UPDATE tasks SET conclusion_date = CURRENT_TIMESTAMP
-                WHERE id = %s''',
-                (id,))
+    Task.check(id)
+
     return redirect(url_for('task.list'))
 
 
 @bp.route('<id>/unconclude')
 @login_required
 def unconclude(id):
-    with get_db() as conn:
-        with conn.cursor() as curs:
-            curs.execute(
-                '''UPDATE tasks SET conclusion_date = NULL
-                WHERE id = %s''',
-                (id,))
+    Task.uncheck(id)
+
     return redirect(url_for('task.list'))
 
 
 @bp.route('/<id>/excluir')
 @login_required
 def delete(id):
-    with get_db() as conn:
-        with conn.cursor() as curs:
-            curs.execute(
-                'DELETE FROM tasks WHERE id = %s',
-                (id,)
-            )
+    Task.delete(id)
+    
     return redirect(url_for('task.list'))

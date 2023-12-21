@@ -46,7 +46,7 @@
                                             {% endif %}
                                         </li>
                                         {% if not task.conclusion_date %}
-                                            <li><a href="{{ url_for('task.update', id=task['id']) }}">alterar</a></li>
+                                            <li><a href="{{ url_for('task.edit', id=task['id']) }}">alterar</a></li>
                                         {% endif %}
                                         <li><a href="{{ url_for('task.delete', id=task['id']) }}">excluir</a></li>
                                     </ul>   

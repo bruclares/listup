@@ -1,4 +1,6 @@
 from ..database.db import get_db
+
+
 class Category():
     pass
 
@@ -9,3 +11,4 @@ class Category():
                 categories = curs.fetchall()
 
         return categories
+

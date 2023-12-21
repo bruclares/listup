@@ -38,3 +38,5 @@ class User():
                         'SELECT * FROM users WHERE id = %s', (user_id,)
                     )
                     g.user = curs.fetchone()
+
+                    
