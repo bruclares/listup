@@ -9,22 +9,32 @@
             <h1 class="titulo">listUp</h1>
             <h4 class="subtitulo">O controle está nas suas mãos!</h4>
             {% for message in get_flashed_messages() %}
+                <div class="alert">{{ message }}</div>
             {% endfor %}
         </header>
         <main>
             <form method="POST">
                 <div>
                     <button>Salvar</button>
+                <div>
+                <br>
+                <div>
+                    <a href="{{ url_for('task.list') }}">Voltar</a>
                 </div>
-                <label for="description"></label><br>
+                <br>
+                <label for="description"></label>
                 {# value aqui será o dicionario criado na função update do controller task_controller #}
-                <input value="{{ task.description }}" type="text" name="description" id="description" placeholder="adicione sua tarefa"><br>
+                <input value="{{ task.description }}" type="text" name="description" id="description" placeholder="adicione sua tarefa">
+                <br><br>
                 
-                <label for="category_id">Selecione a categoria</label><br><br>
+                <label for="category_id">Selecione a categoria</label>
+                <br>
                 <select name="category_id" id="category_id">
-                    <option value="1" {% if task.category_id == 1 %} selected {% endif %}>Pessoal</option>
-                    <option value="2" {% if task.category_id == 2 %} selected {% endif %}>Profissional</option>
-                    <option value="3" {% if task.category_id == 3 %} selected {% endif %}>Familiar</option>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}" {% if task.category_id == category.id %} selected {% endif %}>
+                            {{ category.name }}
+                        </option>
+                    {% endfor %}
                 </select>
             </form>
         </main>

@@ -8,21 +8,29 @@
         <header>
             <h1 class="titulo">listUp</h1>
             <h4 class="subtitulo">Transforme suas tarefas em triunfos!</h4>
+            {% for message in get_flashed_messages() %}
+                <div class="alert">{{ message }}</div>
+            {% endfor %}
         </header>
         <main>
             <section>
                 <form method="POST">
                     <div>
                         <button>Salvar</button>
+                    </div><br>
+                    <div>
+                        <a href="{{ url_for('task.list') }}">Voltar</a>
                     </div>
                     <label for="description"></label><br>
                     <input type="text" name="description" id="description" placeholder="adicione sua tarefa"><br>
 
                     <label for="category_id">Selecione a categoria</label><br><br>
                     <select name="category_id" id="category_id">
-                        <option value="1" selected>Pessoal</option>
-                        <option value="2">Profissional</option>
-                        <option value="3">Familiar</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}" {% if loop.first %} selected {% endif %}>
+                                {{ category.name }}
+                            </option>
+                        {% endfor %}
                     </select>
                 </form>
             </section>

@@ -1,10 +1,12 @@
 import functools
 import psycopg
 from flask import (Blueprint, flash, g, redirect, render_template, request, session, url_for)
-from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.security import check_password_hash
 from ..database.db import get_db
+from ..models.user import User
 
 bp = Blueprint('auth', __name__)
+
 
 @bp.route('/', methods=('GET', 'POST'))
 def login():
@@ -20,22 +22,17 @@ def login():
             error = 'A senha é obrigatória.'
 
         if error is None:
-            with get_db() as conn:
-                with conn.cursor() as curs:
-                    curs.execute(
-                        'SELECT * FROM users WHERE email = %s',
-                        (email,)
-                    )
-                    user = curs.fetchone()
-        
-        if user is None or not check_password_hash(user['password'], password):
-            error = 'Dados incorretos'
+            user = User.login(email)
+
+            if user is None or not check_password_hash(user['password'], password):
+                error = 'Dados incorretos'
 
         if error is None:
             session.clear()
             session['user_id'] = user['id']
             return redirect(url_for('task.list'))
-            
+
+        flash(error)
 
     if 'user_id' in session:
         return redirect(url_for('task.list'))
@@ -61,13 +58,7 @@ def register():
 
         if error is None:
             try:
-                with get_db() as conn:
-                    with conn.cursor() as curs:
-                        curs.execute(
-                            '''INSERT INTO users (name, email, password)
-                            VALUES (%s, %s, %s)''',
-                            (name, email, generate_password_hash(password))
-                        )
+                User.register(name, email, password)
             except psycopg.IntegrityError:
                 error = f"Já temos um usuário com o email {email}."
             else:
@@ -81,17 +72,7 @@ def register():
 # se usuario está logado, vai carregar as informações dele
 @bp.before_app_request
 def load_logged_in_user():
-    user_id = session.get('user_id')
-
-    if user_id is None:
-        g.user = None
-    else:
-        with get_db() as conn:
-            with conn.cursor() as curs:
-                curs.execute(
-                    'SELECT * FROM users WHERE id = %s', (user_id,)
-                )
-                g.user = curs.fetchone()
+    User.logged_user()
 
 
 def login_required(view):

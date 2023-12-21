@@ -5,9 +5,6 @@ def create_app():
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(SECRET_KEY='dev')
 
-    # from .database import db
-    # db.init_app(app)
-
     from .controllers import (auth_controller, task_controller)
 
     app.register_blueprint(auth_controller.bp)

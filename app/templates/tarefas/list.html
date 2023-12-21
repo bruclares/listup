@@ -30,19 +30,25 @@
                                             <s>{{ task['description'] }}</s>
                                         {% endif %}
                                     </div>
-                                    <div>{{ task['category_id'] }}</div>
-                                    <span>{{ task['created_at'] }}</span>
+                                    <div>{{ task['category_name'] }}</div>
+                                    <span>{{ task['created_at'].strftime('%d/%m/%Y') }}</span>
 
                                     {% if task['conclusion_date'] %}
-                                        <span>{{ task['conclusion_date'] }}</span>
+                                        <span>{{ task['conclusion_date'].strftime('%d/%m/%Y') }}</span>
                                     {% endif %}
 
                                     <ul>
-                                        <li><a href="{{ url_for('task.conclusion', id=task['id']) }}">check</a></li>
+                                        <li>
+                                            {% if not task.conclusion_date %}
+                                                <a href="{{ url_for('task.conclusion', id=task['id']) }}">concluir</a>
+                                            {% else %}
+                                                <a href="{{ url_for('task.unconclude', id=task['id']) }}">desconcluir</a>
+                                            {% endif %}
+                                        </li>
                                         {% if not task.conclusion_date %}
                                             <li><a href="{{ url_for('task.update', id=task['id']) }}">alterar</a></li>
                                         {% endif %}
-                                        <li><a href="#">excluir</a></li>
+                                        <li><a href="{{ url_for('task.delete', id=task['id']) }}">excluir</a></li>
                                     </ul>   
                                 </li>
                             {% endfor %}
