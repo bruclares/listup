@@ -16,7 +16,7 @@ class User():
                 user = curs.fetchone()
 
         return user
-    
+
     def register(name, email, password):
         with get_db() as conn:
             with conn.cursor() as curs:
@@ -38,5 +38,3 @@ class User():
                         'SELECT * FROM users WHERE id = %s', (user_id,)
                     )
                     g.user = curs.fetchone()
-
-                    

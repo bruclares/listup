@@ -4,29 +4,38 @@
 
 {% block content %}
 
-    <div class="container">
-        <header>
-            <h1 class="titulo">listUp</h1>
-            <h4 class="subtitulo">Conquiste seus objetivos!</h4>
-            {% for message in get_flashed_messages() %}
-                <div class="alert">{{ message }}</div>
-            {% endfor %}
-        </header>
-        <main>
-            <section>
-                <form method="POST">
-                    <label for="email"></label><br>
-                    <input type="email" name="email" id="email" placeholder="e-mail"><br>
-
-                    <label for="password"></label><br>
-                    <input type="password" name="password" id="password" placeholder="senha"><br><br>
-            
-                    <button type="submit">Login</button>
-
-                    <p>Ainda não tem uma conta?<br><a href="{{ url_for('auth.register') }}">Cadastre-se</a></p>
-                </form>
-            </section>
-            </main>
-    </div>
+<main class="container pt-5">
+  <header class="text-center mb-5">
+    <h1 class="text-danger display-1">listUp</h1>
+    <h4>Conquiste seus objetivos!</h4>
+    {% for message in get_flashed_messages() %}
+    <div>{{ message }}</div>
+    {% endfor %}
+  </header>
+  <!-- mx => margem no eixo X -->
+  <section class="row justify-content-center">
+    <form class="col col-sm-9 col-md-7 col-xl-5 mb-4" method="POST">
+      <div class="input-group mb-4 border-bottom border-2">
+        <span class="input-group-text border-0 bg-transparent py-0" id="email">
+          <i class="fs-1 bi bi-envelope-at-fill"></i>
+        </span>
+        <input type="email" name="email" id="email" class="form-control border-0 border-start border-2 shadow-none"
+          placeholder="email@email.com " aria-label="email" aria-describedby="email">
+      </div>
+      <div class="input-group mb-5 border-bottom border-2">
+        <span class="input-group-text border-0 bg-transparent py-0" id="password">
+          <i class="fs-1 bi bi-fingerprint"></i>
+        </span>
+        <input type="password" name="password" id="password"
+          class="form-control border-0 border-start border-2 shadow-none" placeholder="senha" aria-label="password"
+          aria-describedby="password">
+      </div>
+      <div class="d-grid mx-auto w-75">
+        <button type="button" class="btn btn-primary rounded-pill fs-5 py-3">Login</button>
+      </div>
+    </form>
+    <p class="text-center fs-5">Ainda não tem uma conta? <a href="{{ url_for('auth.register') }}">Cadastre-se</a></p>
+  </section>
+</main>
 
 {% endblock %}

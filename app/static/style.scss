@@ -1,0 +1,24 @@
+// vai controlar tudo que o arquivo css final terá
+@import url('https://fonts.googleapis.com/css2?family=Poppins&family=Roboto&family=Ubuntu&display=swap');
+
+$danger: #EE6464;
+$primary: #DCEF64;
+$btn-font-family: 'Poppins', sans-serif;
+$border-color: #373737;
+
+
+@import "../../node_modules/bootstrap/scss/bootstrap";
+
+.background {
+    background-color: #fefefe;
+}
+
+h1 {
+    font-family: 'Ubuntu', sans-serif;
+}
+
+body, a {
+    font-family: 'Roboto', sans-serif;
+    color: #373737;
+}
+
