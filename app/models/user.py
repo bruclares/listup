@@ -38,3 +38,21 @@ class User():
                         'SELECT * FROM users WHERE id = %s', (user_id,)
                     )
                     g.user = curs.fetchone()
+
+    def validate_login(form_request):
+        error_messages = {}
+
+        # name = form_request['name']
+        email = form_request['email']
+        password = form_request['password']
+
+        # if not name:
+        #     error_messages['name'] = 'O nome é obrigatório.'
+        
+        if not email:
+            error_messages['email'] = 'O email é obrigatório.'
+
+        if not password:
+            error_messages['password'] = 'A senha é obrigatória.'
+                
+        return error_messages

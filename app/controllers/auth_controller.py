@@ -11,31 +11,20 @@ bp = Blueprint('auth', __name__)
 @bp.route('/', methods=('GET', 'POST'))
 def login():
     if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
+        validation_errors = User.validate_login(request.form)
 
-        error = None
+        if not validation_errors:
+            user = User.login(request.form['email'])
 
-        if not email:
-            error = 'O email é obrigatório.'
-        elif not password:
-            error = 'A senha é obrigatória.'
+            if user is None or not check_password_hash(user['password'], request.form['password']):
+                flash('Dados incorretos', 'login_error')
+            else:
+                session.clear()
+                session['user_id'] = user['id']
+                return redirect(url_for('task.list'))
 
-        if error is None:
-            user = User.login(email)
-
-            if user is None or not check_password_hash(user['password'], password):
-                error = 'Dados incorretos'
-
-        if error is None:
-            session.clear()
-            session['user_id'] = user['id']
-            return redirect(url_for('task.list'))
-
-        flash(error)
-
-    if 'user_id' in session:
-        return redirect(url_for('task.list'))
+        for category, message in validation_errors.items():
+            flash(message, category)
 
     return render_template('auth/login.html')
 

@@ -4,36 +4,43 @@
 
 {% block content %}
 
-    <div>
-        <header>
-            <h1 class="titulo">listUp</h1>
-            <h4 class="subtitulo">Transforme suas tarefas em triunfos!</h4>
-            {% for message in get_flashed_messages() %}
-                <div class="alert">{{ message }}</div>
-            {% endfor %}
-        </header>
-        <main>
-            <section>
-                <form method="POST">
-                    <div>
-                        <button>Salvar</button>
-                    </div><br>
-                    <div>
-                        <a href="{{ url_for('task.list') }}">Voltar</a>
-                    </div>
-                    <label for="description"></label><br>
-                    <input type="text" name="description" id="description" placeholder="adicione sua tarefa"><br>
+<main class="container pt-5">
+  <header class="text-center mb-5">
+    <h1 class="text-danger display-1">listUp</h1>
+    <h4>Transforme suas tarefas em triunfos!</h4>
+    {% for message in get_flashed_messages() %}
+      <div class="alert alert-danger alert-dismissible fade w-50 mx-auto show" role="alert">
+        <span>{{ message }}</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  </header>
+  <nav class="row justify-content-center mb-5">
+    <div class="col-md-6">
+      <a class="btn btn-primary rounded-pill" href="{{ url_for('task.list') }}">Voltar</a>
+      {# quando um botão está fora do form precisa apontar o id do form no atributo form #}
+      <button form="create-task" class="btn btn-primary rounded-pill float-end">Salvar</button>
+    </div>
+  </nav>
+  <section class="row justify-content-center">
+    <form id="create-task" class="col-md-6" method="POST">
+      <div class="form-floating mb-4 border-bottom border-2">
+        <input type="text" name="description" id="description" class="form-control border-0 shadow-none"
+          placeholder="adicione a tarefa" aria-label="description" aria-describedby="description">
+          <label for="description">adicione a tarefa</label>
+      </div>
+      <div class="form-floating border-bottom border-2">
+        <select name="category_id" id="category_id" class="form-select border-0 shadow-none">
+          {% for category in categories %}
+            <option value="{{ category.id }}">
+              {{ category.name }}
+            </option>
+          {% endfor %}
+        </select>
+        <label for="category_id" class="form-label">selecione a categoria</label>
+      </div>
+    </form>
+  </section>
+</main>
 
-                    <label for="category_id">Selecione a categoria</label><br><br>
-                    <select name="category_id" id="category_id">
-                        {% for category in categories %}
-                            <option value="{{ category.id }}" {% if loop.first %} selected {% endif %}>
-                                {{ category.name }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </form>
-            </section>
-        </main>
-
-{% endblock %}
+  {% endblock %}

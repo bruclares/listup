@@ -4,64 +4,86 @@
 
 {% block content %}
 
-    <header>
-        <h1 class="titulo">listUp</h1>
-        <h4 class="subtitulo">Uma tarefa de cada vez!</h4>
-    </header>
-        {% if tasks %}
-            <nav>
-                <form>
-                    <label for="search"></label><br>
-                    <input type="search" name="search" id="search" placeholder="buscar"><br>
-                    <button type="submit">Buscar</button>
-                </form>
-                <a class="btn-new-task" href="{{ url_for('task.create')}}">Nova tarefa</a>
-            </nav>
-            <main>
-                <section>
-                    <ul>
-                        {% if tasks is not string %}
-                            {% for task in tasks %}
-                                <li>
-                                    <div>
-                                        {% if not task.conclusion_date %}
-                                            {{ task['description'] }}
-                                        {% else %}
-                                            <s>{{ task['description'] }}</s>
-                                        {% endif %}
-                                    </div>
-                                    <div>{{ task['category_name'] }}</div>
-                                    <span>{{ task['created_at'].strftime('%d/%m/%Y') }}</span>
+<main class="container pt-5 px-md-5">
 
-                                    {% if task['conclusion_date'] %}
-                                        <span>{{ task['conclusion_date'].strftime('%d/%m/%Y') }}</span>
-                                    {% endif %}
+  <header class="text-center mb-5">
+    <h1 class="text-danger display-1">listUp</h1>
+    <h4>Uma tarefa de cada vez!</h4>
+  </header>
 
-                                    <ul>
-                                        <li>
-                                            {% if not task.conclusion_date %}
-                                                <a href="{{ url_for('task.conclusion', id=task['id']) }}">concluir</a>
-                                            {% else %}
-                                                <a href="{{ url_for('task.unconclude', id=task['id']) }}">desconcluir</a>
-                                            {% endif %}
-                                        </li>
-                                        {% if not task.conclusion_date %}
-                                            <li><a href="{{ url_for('task.edit', id=task['id']) }}">alterar</a></li>
-                                        {% endif %}
-                                        <li><a href="{{ url_for('task.delete', id=task['id']) }}">excluir</a></li>
-                                    </ul>   
-                                </li>
-                            {% endfor %}
-                        {% else %}
-                            <p>{{ tasks }}</p>
-                        {% endif %}
-                    </ul>
-                </section>
-            </main>
-        {% else %}
-            <p class="text-center fs-5">
-                Você não tem nenhuma tarefa. <br> 
-                Comece a cadastrar as suas tarefas <a class="fw-bold" href="{{ url_for('task.create') }}">aqui</a>
-            </p>
-        {% endif %}
+  {% if tasks %}
+  <nav class="navbar bg-transparent mb-5">
+    <form class="d-flex" role="search">
+      <div class="input-group border-bottom border-2">
+        <input type="search" name="search" id="search" class="form-control border-0 border-2 shadow-none bg-transparent"
+          placeholder="Buscar" aria-label="search" aria-describedby="search">
+        <button class="btn" id="search">
+          <i class="fs-5 bi bi-search"></i>
+        </button>
+      </div>
+    </form>
+    <a class="d-none d-md-block btn btn-primary rounded-pill" href="{{ url_for('task.create')}}">Nova tarefa</a>
+    <a class="d-block d-md-none btn btn-primary rounded-circle" href="{{ url_for('task.create')}}"><i class="bi bi-plus-lg"></i></a>
+  </nav>
+
+  <section>
+    <ul class="list-group list-group-flush">
+      {% if tasks is not string %}
+        {% for task in tasks %}
+          <li class="list-group-item bg-transparent mb-3">
+            <div class="row mb-2">
+              <div class="col text-start">
+                {% if not task.conclusion_date %}
+                  {{ task['description'] }}
+                {% else %}
+                  <s>{{ task['description'] }}</s>
+                {% endif %}
+              </div>
+
+              <div class="col text-end">
+                {% if not task.conclusion_date %}
+                  <a class="text-success me-3" href="{{ url_for('task.conclusion', id=task['id']) }}"><i class="bi bi-check-lg fs-5"></i></a>
+                  <a class="text-info me-3" href="{{ url_for('task.edit', id=task['id']) }}"><i class="bi bi-pencil-fill"></i></a>
+                {% else %}
+                  <a class="me-3" href="{{ url_for('task.unconclude', id=task['id']) }}"><i class="bi bi-arrow-counterclockwise"></i></a>
+                {% endif %}
+                <a class="text-danger" href="{{ url_for('task.delete', id=task['id']) }}"><i class="bi bi-trash3-fill"></i></a>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-auto text-start text-secondary ">
+                <em>
+                  {{ task['category_name'] }}
+                </em>
+              </div>
+              <div class="col text-end text-md-start">
+                <i class="bi bi-calendar-plus text-secondary"></i>
+                <span class="ms-1 small">
+                  {{ task['created_at'].strftime('%d/%m/%Y') }}
+                </span>
+                {% if task['conclusion_date'] %}
+                  <i class="bi bi-calendar-check text-secondary ms-4"></i>
+                  <span class="ms-1 small">
+                    {{ task['conclusion_date'].strftime('%d/%m/%Y') }}
+                  </span>
+                {% endif %}
+              </div>
+            </div>
+          </li>
+        {% endfor %}
+      {% else %}
+        <p>{{ tasks }}</p>
+      {% endif %}
+    </ul>
+  </section>
+
+  {% else %}
+  <p class="text-center fs-5">
+    Você não tem nenhuma tarefa. <br>
+    Comece a cadastrar as suas tarefas <a class="fw-bold" href="{{ url_for('task.create') }}">aqui</a>
+  </p>
+  {% endif %}
+
+</main>
 {% endblock %}

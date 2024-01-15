@@ -4,34 +4,49 @@
 
 {% block content %}
 
-    <div class="container">
-        <header>
-            <h1 class="titulo">listUp</h1>
-            <h4 class="subtitulo">Desperte sua produtividade!</h4>
-            {% for message in get_flashed_messages() %}
-                <div class="alert">{{ message }}</div>
-            {% endfor %}
-        </header>
-        <main>
-            <section>
-                <form method="POST">
-                    <label for="name"></label> <br>
-                    <input type="text" name="name" id="name" placeholder="nome completo"> <br>
-                
-                    <label for="email"></label><br>
-                    <input type="email" name="email" id="email" placeholder="e-mail"><br>
+<main class="container pt-5">
 
-                    <label for="password"></label><br>
-                    <input type="password" name="password" id="password" placeholder="senha"><br><br>
-            
-                    <button type="submit">Crie sua conta</button>
-
-                    <p>Já tem uma conta?<br><a href="{{ url_for('auth.login') }}">Faça o login</a></p>
-
-                    
-                </form>
-            </section>
-        </main>
+  <header class="text-center mb-5">
+    <h1 class="text-danger display-1">listUp</h1>
+    <h4>Desperte sua produtividade!</h4>
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-danger alert-dismissible fade w-50 mx-auto show" role="alert">
+      <span>{{ message }}</span>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
+    {% endfor %}
+  </header>
 
+  <section class="row justify-content-center">
+    <form class="col col-sm-9 col-md-7 col-xl-5 mb-4" method="POST">
+      <div class="input-group mb-4 border-bottom border-2">
+        <span class="input-group-text border-0 bg-transparent py-0" id="email">
+          <i class="fs-1 bi bi-person-fill-check"></i>
+        </span>
+        <input type="text" name="name" id="name" class="form-control border-0 border-start border-2 shadow-none"
+          placeholder="nome completo" aria-label="name" aria-describedby="name">
+      </div>
+      <div class="input-group mb-5 border-bottom border-2">
+        <span class="input-group-text border-0 bg-transparent py-0" id="password">
+          <i class="fs-1 bi bi-envelope-at-fill"></i>
+        </span>
+        <input type="email" name="email" id="email"
+          class="form-control border-0 border-start border-2 shadow-none" placeholder="email@email.com" aria-label="email"
+          aria-describedby="email">
+      </div>
+      <div class="input-group mb-5 border-bottom border-2">
+        <span class="input-group-text border-0 bg-transparent py-0" id="password">
+          <i class="fs-1 bi bi-fingerprint"></i>
+        </span>
+        <input type="password" name="password" id="password"
+          class="form-control border-0 border-start border-2 shadow-none" placeholder="senha" aria-label="password"
+          aria-describedby="password">
+      </div>
+      <div class="d-grid mx-auto w-75">
+        <button class="btn btn-primary rounded-pill fs-5 py-3 mb-3">Crie sua conta</button>
+      </div>
+      <p class="text-center fs-5">Já tem uma conta? <a href="{{ url_for('auth.login') }}">Faça o login</a></p>
+    </form>
+  </section>
+</main>
 {% endblock %}
