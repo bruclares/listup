@@ -11,6 +11,7 @@
     <h1 class="text-danger display-1">listUp</h1>
     <h4>Conquiste seus objetivos!</h4>
 
+    {# aqui vai pegar todas as mensagens guardadas em flash() filtrando pela categoria #}
     {% with login_errors = get_flashed_messages(category_filter=["login_error"]) %}
 
       {% for login_error in login_errors %}
@@ -26,6 +27,7 @@
 
   <section class="row justify-content-center">
     <form class="col col-sm-9 col-md-7 col-xl-5 mb-4" method="POST">
+
       <div class="mb-4">
         {% with email_errors = get_flashed_messages(category_filter=["email"]) %}
           <div class="input-group border-bottom border-2">
@@ -45,6 +47,7 @@
           {% endif %}
         {% endwith %}
       </div>
+      
       <div class="mb-5">
         {% with password_errors = get_flashed_messages(category_filter=["password"]) %}
           <div class="input-group border-bottom border-2">

@@ -2,11 +2,15 @@ from ..database.db import get_db
 from werkzeug.security import generate_password_hash
 from flask import (g, session)
 
+# a model é a representação de uma entidade
+# neste caso aqui a model está no formato classe
+# a class user representa a tabela users
+
 
 class User():
     pass
 
-    def login(email):
+    def get_from_email(email):
         with get_db() as conn:
             with conn.cursor() as curs:
                 curs.execute(
@@ -42,17 +46,31 @@ class User():
     def validate_login(form_request):
         error_messages = {}
 
-        # name = form_request['name']
         email = form_request['email']
         password = form_request['password']
 
-        # if not name:
-        #     error_messages['name'] = 'O nome é obrigatório.'
-        
         if not email:
-            error_messages['email'] = 'O email é obrigatório.'
+            error_messages['email'] = 'O e-mail é obrigatório.'
 
         if not password:
             error_messages['password'] = 'A senha é obrigatória.'
-                
+
+        return error_messages
+
+    def validate_register(form_request):
+        error_messages = {}
+
+        name = form_request['name']
+        email = form_request['email']
+        password = form_request['password']
+
+        if not name:
+            error_messages['name'] = 'O nome é obrigatório.'
+
+        if not email:
+            error_messages['email'] = 'O e-mail é obrigatório.'
+
+        if not password:
+            error_messages['password'] = 'A senha é obrigatória.'
+
         return error_messages

@@ -1,12 +1,9 @@
 from flask import (
     Blueprint, flash, redirect, render_template, request, session, url_for
 )
-
-from ..database.db import get_db
 from .auth_controller import login_required
 from ..models.task import Task
 from ..models.category import Category
-
 
 bp = Blueprint('task', __name__, url_prefix='/tarefas')
 
@@ -28,22 +25,18 @@ def list():
 def create():
     if request.method == 'POST':
         user_id = session.get('user_id')
-        description = request.form['description']
         category_id = request.form['category_id']
+        validation_errors = Task.validate(request.form)
 
-        error = None
-
-        if not description:
-            error = 'A tarefa é obrigatória.'
-
-        if error is None:
-            Task.insert(user_id, description, category_id)
+        if not validation_errors:
+            Task.insert(user_id, request.form['description'], category_id)
             # url_for(nome do controller(bp).função)
             return redirect(url_for('task.list'))
 
-        flash(error)
+        for category, message in validation_errors.items():
+            flash(message, category)
 
-    #aqui eu pego as categorias e passo para o template
+    # aqui eu pego as categorias e passo para o template
     categories = Category.get_all()
 
     return render_template('tarefas/create_task.html', categories=categories)
@@ -53,20 +46,16 @@ def create():
 @login_required
 def edit(id):
     if request.method == 'POST':
-        description = request.form['description']
         category_id = request.form['category_id']
+        validation_errors = Task.validate(request.form)
 
-        error = None
-
-        if not description:
-            error = 'A tarefa é obrigatória.'
-
-        if error is None:
-            Task.update(description, category_id, id)
+        if not validation_errors:
+            Task.update(request.form['description'], category_id, id)
 
             return redirect(url_for('task.list'))
 
-        flash(error)
+        for category, message in validation_errors.items():
+            flash(message, category)
 
     task = Task.get_from_id(id)
 
@@ -99,5 +88,5 @@ def unconclude(id):
 @login_required
 def delete(id):
     Task.delete(id)
-    
+
     return redirect(url_for('task.list'))

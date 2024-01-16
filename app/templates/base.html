@@ -13,7 +13,7 @@
 
   {% if g.user %}
     <nav class="navbar bg-primary bg-opacity-75">
-      <div class="container-fluid">
+      <div class="container">
         <a class="navbar-brand" href="{{url_for('task.list')}}">Minha lista</a>
         <div class="hstack gap-3 ms-auto">
             <span class="nav-link">{{ g.user.name }}</span>

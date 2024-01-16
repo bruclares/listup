@@ -1,8 +1,8 @@
 import functools
 import psycopg
-from flask import (Blueprint, flash, g, redirect, render_template, request, session, url_for)
+from flask import (
+    Blueprint, flash, g, redirect, render_template, request, session, url_for)
 from werkzeug.security import check_password_hash
-from ..database.db import get_db
 from ..models.user import User
 
 bp = Blueprint('auth', __name__)
@@ -11,20 +11,23 @@ bp = Blueprint('auth', __name__)
 @bp.route('/', methods=('GET', 'POST'))
 def login():
     if request.method == 'POST':
+        # verifica na model se há erros de validação
         validation_errors = User.validate_login(request.form)
 
         if not validation_errors:
-            user = User.login(request.form['email'])
+            # está verificando se existe o user pelo email
+            user = User.get_from_email(request.form['email'])
 
-            if user is None or not check_password_hash(user['password'], request.form['password']):
+            if user is None or not check_password_hash(
+                                user['password'], request.form['password']):
                 flash('Dados incorretos', 'login_error')
             else:
                 session.clear()
                 session['user_id'] = user['id']
                 return redirect(url_for('task.list'))
-
-        for category, message in validation_errors.items():
-            flash(message, category)
+        else:
+            for category, message in validation_errors.items():
+                flash(message, category)
 
     return render_template('auth/login.html')
 
@@ -32,32 +35,26 @@ def login():
 @bp.route('/cadastrar', methods=('GET', 'POST'))
 def register():
     if request.method == 'POST':
-        name = request.form['name'].title()
-        password = request.form['password']
-        email = request.form['email']
+        validation_errors = User.validate_register(request.form)
 
-        error = None
-
-        if not name:
-            error = 'O nome é obrigatório.'
-        elif not email:
-            error = 'O email é obrigatório.'
-        elif not password:
-            error = 'A senha é obrigatória.'
-
-        if error is None:
+        if not validation_errors:
             try:
-                User.register(name, email, password)
+                User.register(request.form['name'],
+                              request.form['email'],
+                              request.form['password'])
             except psycopg.IntegrityError:
-                error = f"Já temos um usuário com o email {email}."
+                flash(f'''Já temos um usuário com o e-mail
+                      {request.form['email']}.''', 'register_error')
             else:
                 return redirect(url_for("auth.login"))
-            
-        flash(error)
+        else:
+            for category, message in validation_errors.items():
+                flash(message, category)
 
     return render_template('auth/register.html')
 
-# vai executar a função antes de cada requisição 
+
+# vai executar a função antes de cada requisição
 # se usuario está logado, vai carregar as informações dele
 @bp.before_app_request
 def load_logged_in_user():

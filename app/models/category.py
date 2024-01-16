@@ -11,4 +11,3 @@ class Category():
                 categories = curs.fetchall()
 
         return categories
-

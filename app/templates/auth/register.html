@@ -9,7 +9,7 @@
   <header class="text-center mb-5">
     <h1 class="text-danger display-1">listUp</h1>
     <h4>Desperte sua produtividade!</h4>
-    {% for message in get_flashed_messages() %}
+    {% for message in get_flashed_messages(category_filter=["register_error"]) %}
     <div class="alert alert-danger alert-dismissible fade w-50 mx-auto show" role="alert">
       <span>{{ message }}</span>
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -19,29 +19,66 @@
 
   <section class="row justify-content-center">
     <form class="col col-sm-9 col-md-7 col-xl-5 mb-4" method="POST">
-      <div class="input-group mb-4 border-bottom border-2">
-        <span class="input-group-text border-0 bg-transparent py-0" id="email">
-          <i class="fs-1 bi bi-person-fill-check"></i>
-        </span>
-        <input type="text" name="name" id="name" class="form-control border-0 border-start border-2 shadow-none"
-          placeholder="nome completo" aria-label="name" aria-describedby="name">
+      <div class="mb-4">
+        {% with name_errors = get_flashed_messages(category_filter=["name"]) %}
+          <div class="input-group border-bottom border-2">
+            <span class="input-group-text border-0 bg-transparent py-0" id="name">
+              <i class="fs-1 bi bi-person-fill-check"></i>
+            </span>
+            <input type="text" name="name" id="name" 
+              class="form-control border-0 border-start border-2 shadow-none {{'is-invalid' if name_errors }}"
+              placeholder="nome completo" aria-label="name" aria-describedby="name">
+          </div>
+          {% if name_errors %}
+            <small id="name_feedback" class="text-danger">
+              {% for name_error in name_errors %}
+                <p>{{ name_error }}</p>
+              {% endfor %}
+            </small>
+          {% endif %}
+        {% endwith %}
       </div>
-      <div class="input-group mb-5 border-bottom border-2">
-        <span class="input-group-text border-0 bg-transparent py-0" id="password">
-          <i class="fs-1 bi bi-envelope-at-fill"></i>
-        </span>
-        <input type="email" name="email" id="email"
-          class="form-control border-0 border-start border-2 shadow-none" placeholder="email@email.com" aria-label="email"
-          aria-describedby="email">
+
+      <div class="mb-4">
+        {% with email_errors = get_flashed_messages(category_filter=["email"]) %}
+          <div class="input-group border-bottom border-2">
+            <span class="input-group-text border-0 bg-transparent py-0" id="email">
+              <i class="fs-1 bi bi-envelope-at-fill"></i>
+            </span>
+            <input type="email" name="email" id="email"
+              class="form-control border-0 border-start border-2 shadow-none {{'is-invalid' if email_errors }}" 
+              placeholder="email@email.com" aria-label="email" aria-describedby="email">
+          </div>
+          {% if email_errors %}
+            <small id="email_feedback" class="text-danger">
+              {% for email_error in email_errors %}
+                <p>{{ email_error }}</p>
+              {% endfor %}
+            </small>
+          {% endif %}
+        {% endwith%}
       </div>
-      <div class="input-group mb-5 border-bottom border-2">
-        <span class="input-group-text border-0 bg-transparent py-0" id="password">
-          <i class="fs-1 bi bi-fingerprint"></i>
-        </span>
-        <input type="password" name="password" id="password"
-          class="form-control border-0 border-start border-2 shadow-none" placeholder="senha" aria-label="password"
-          aria-describedby="password">
+
+      <div class="mb-5">
+        {% with password_errors = get_flashed_messages(category_filter=["password"]) %}
+          <div class="input-group border-bottom border-2">
+            <span class="input-group-text border-0 bg-transparent py-0" id="password">
+              <i class="fs-1 bi bi-fingerprint"></i>
+            </span>
+            <input type="password" name="password" id="password"
+              class="form-control border-0 border-start border-2 shadow-none {{'is-invalid' if password_errors }}" 
+              placeholder="senha" aria-label="password" aria-describedby="password">
+          </div>
+          {% if password_errors %}
+            <small id="password_feedback" class="text-danger">
+              {% for password_error in password_errors %}
+                <p>{{ password_error }}</p>
+              {% endfor %}
+            </small>
+          {% endif %}
+        {% endwith%}
       </div>
+      
       <div class="d-grid mx-auto w-75">
         <button class="btn btn-primary rounded-pill fs-5 py-3 mb-3">Crie sua conta</button>
       </div>
